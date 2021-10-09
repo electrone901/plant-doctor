@@ -9,11 +9,11 @@ import CreatePet from './components/create-post/CreatePlant'
 
 import PlantswapContainer from './components/plantswap/plantswap-container/PlantswapContainer'
 import CommunityContainer from './components/community/community-container/CommunityContainer'
-
-
+import PageCommunity from './components/community/page-community/PageCommunity'
+import DonateNFT from './components/donate-nft/DonateNFT'
 
 import Web3 from 'web3'
-import MyPet from './abis/Pet.json'
+import community from './abis/Community.json'
 import { useState } from 'react'
 
 function App() {
@@ -39,12 +39,19 @@ function App() {
     const accounts = await web3.eth.getAccounts()
     setAccount(accounts[0])
     const networkId = await web3.eth.net.getId()
-    const networkData = MyPet.networks[networkId]
+    const networkData = community.networks[networkId]
 
     if (networkData) {
-      const abi = MyPet.abi
-      const address = MyPet.networks[networkId].address
+      const abi = community.abi
+      const address = community.networks[networkId].address
       const myContract = new web3.eth.Contract(abi, address)
+      // const balance =  myContract.count().call()
+      // console.log(
+      //   '🚀 ~ file: App.js ~ line 49 ~ getContract ~ balance',
+      //   myContract,
+      //   balance,
+      // )
+
       setContractData(myContract)
     } else {
       window.alert(
@@ -66,8 +73,15 @@ function App() {
         <Switch>
           <Route exact path="/create-pet" component={CreatePet} />
           <Route exact path="/plant-swap" component={PlantswapContainer} />
-          <Route exact path="/community" component={CommunityContainer} />
+          {/* <Route exact path="/community" component={CommunityContainer} /> */}
+
+          <Route path="/community">
+            <CommunityContainer account={account} contractData={contractData} />
+          </Route>
+
+          <Route exact path="/page-community" component={PageCommunity} />
           <Route exact path="/create-pet" component={CreatePet} />
+          <Route exact path="/donate" component={DonateNFT} />
 
           <Route path="/pet-details/:petId">
             <PetDetails account={account} contractData={contractData} />

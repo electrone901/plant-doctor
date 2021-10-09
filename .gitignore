@@ -4,7 +4,8 @@
 /node_modules
 /.pnp
 .pnp.jsclear
-APIKEYS
+src/APIKEYS.js
+src/components/APIKEYPORT.js
 
 # testing
 /coverage

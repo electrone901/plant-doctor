@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import PhotoCamera from '@material-ui/icons/PhotoCamera'
 import './RegisterCommunity.css'
@@ -15,7 +15,12 @@ import { NFTStorage, File } from 'nft.storage'
 import { createRef } from 'react'
 import { apiKey } from '../../../APIKEYS'
 
-function RegisterCommunity() {
+import { providers } from 'ethers'
+import { init } from '@textile/eth-storage'
+
+function RegisterCommunity({ account, contractData }) {
+  console.log(' contractData', contractData)
+
   // Add variables
   const history = useHistory()
   const [image, setImage] = useState('')
@@ -26,6 +31,49 @@ function RegisterCommunity() {
   const [imageName, setImageName] = useState('')
   const [imageType, setImageType] = useState('')
   const [loading, setLoading] = useState(false)
+  const [codeHash, setCodeHash] = useState('')
+
+  const [communities, setCommunities] = useState([])
+
+  useEffect(() => {
+    const loadCommunity = async () => {
+      try {
+        // pass the cid
+        const cid = 'QmTFaLUesrjbQLKxNszz2DWZ33N9YuGBSVCLpwXnvyiumz'
+
+        let fileData = await fetch(`https://ipfs.io/ipfs/${cid}`)
+
+        console.log('1 🚀 ', fileData)
+        const yourData = await fileData.json()
+        console.log('2', yourData)
+
+        //  make API call
+
+        // get image
+        // const temp = []
+        // for (let cid of cids.value) {
+        //   if (cid?.cid) {
+        //     const getImage = (ipfsURL) => {
+        //       if (!ipfsURL) return
+        //       ipfsURL = ipfsURL.split('://')
+        //       return 'https://ipfs.io/ipfs/' + ipfsURL[1]
+        //     }
+
+        //     data.image = await getImage(data.image)
+        //     data.cid = cid.cid
+        //     data.created = cid.created
+        //     temp.push(data)
+        //   }
+        // }
+        // setPetsData(temp)
+        // setLoading(false)
+      } catch (error) {
+        console.log(error)
+        // setLoading(false)
+      }
+    }
+    loadCommunity()
+  }, [])
 
   const handleImage = (event) => {
     setImage(event.target.files[0])
@@ -33,23 +81,89 @@ function RegisterCommunity() {
     setImageType(event.target.files[0].type)
   }
 
+  const getList = async (event) => {
+    event.preventDefault()
+    if (contractData) {
+      // get community list from the contract
+
+      const getCommunityById = await contractData.methods.communityList(
+        0x1f8a67061ec8d676a60ff20fedc9226eddc3b81a21808e5dfc42bfc684740557,
+      )
+      console.log('communityList', getCommunityById)
+
+      // get community list from the contract
+      const communityCount = await contractData.methods.count().call()
+      console.log('communityCount', communityCount)
+      const communityList = await contractData.methods.communityList(
+        0x1f8a67061ec8d676a60ff20fedc9226eddc3b81a21808e5dfc42bfc684740557,
+      )
+      console.log('communityList', communityList)
+    }
+  }
+
   const handleSubmit = async (event) => {
     event.preventDefault()
+    console.log(
+      'input',
+      image,
+      name,
+      description,
+      PhysicalAddress,
+      walletAddress,
+    )
 
     try {
-      // setLoading(true)
-      // const client = new NFTStorage({ token: apiKey })
-      // const metadata = await client.store({
-      //   name: petName,
-      //   description: `${ownerName}, ${petType}`,
-      //   image: new File([image], imageName, { type: imageType }),
+      // await window.ethereum.enable()
+      // const provider = new providers.Web3Provider(window.ethereum)
+      // const wallet = provider.getSigner()
+      // const storage = await init(wallet)
+
+      // // const blob = new Blob([ image, name, description, PhysicalAddress, walletAddress], { type: "text/plain" });
+      // const blob = new Blob(
+      //   [name, description, PhysicalAddress, walletAddress],
+      //   { type: 'text/plain' },
+      // )
+
+      // const communityImage = new Blob([image], { type: 'text/plain' })
+      // const file = new File([blob], 'community.txt', {
+      //   type: 'text/plain',
+      //   lastModified: new Date().getTime(),
       // })
-      // if (metadata) {
-      //   history.push('/')
-      // }
-    } catch (error) {
-      console.log(error)
-      setLoading(false)
+
+      // // await storage.addDeposit()
+      // const { id, cid } = await storage.store(file)
+      // console.log('', id)
+      // console.log('cid hash', cid)
+
+      // const { request, deals } = await storage.status(id)
+      // console.log('status_code', request.status_code)
+      // console.log('deals', deals)
+
+      // cid save image to textile first  then get the imageURL then save it to the contract
+      // const storage = await init(account)
+
+      const imageURL1 = 'QmfTszDpe7niQYpP5DYMYtkCKZUuP33HVWJEVK3ikzvyY8',
+        communityName1 = 'Test community',
+        description1 = 'This is wonderful',
+        physicalAddress1 = '123 west street NY NY 10024l',
+        walletAddress1 = '0x83a8bA10cbc13a5Cd827d020693920cc4a7C1103'
+
+      // Call contract to register community
+      const registerCommunityResponse = await contractData.methods
+        .registerCommunity(
+          imageURL1,
+          communityName1,
+          description1,
+          physicalAddress1,
+          walletAddress1,
+        )
+        .send({ from: account })
+
+      console.log(' registerCommunityResponse', registerCommunityResponse)
+
+      // setCodeHash(registerCommunityResponse)
+    } catch (err) {
+      console.error(err)
     }
   }
 
@@ -60,6 +174,10 @@ function RegisterCommunity() {
         style={{ minHeight: '70vh', paddingBottom: '3rem' }}
       >
         <div>
+          <img
+            src=" https://ipfs.io/ipfs/QmfTszDpe7niQYpP5DYMYtkCKZUuP33HVWJEVK3ikzvyY8"
+            alt=""
+          />
           <Typography className="title" color="textPrimary" gutterBottom>
             Register Your Garden Community
           </Typography>
@@ -132,7 +250,6 @@ function RegisterCommunity() {
                 onChange={(e) => setWalletAddress(e.target.value)}
               />
 
-
               <Button
                 size="large"
                 variant="contained"
@@ -143,6 +260,14 @@ function RegisterCommunity() {
               </Button>
             </form>
           </div>
+          <Button
+            size="large"
+            variant="contained"
+            color="primary"
+            onClick={getList}
+          >
+            getList
+          </Button>
         </div>
       </Container>
     </StylesProvider>

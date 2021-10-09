@@ -5,11 +5,11 @@ import './CommunityContainer.css'
 import RegisterCommunity from '../register-community/RegisterCommunity'
 import CommunityList from '../community-list/CommunityList'
 
-function CommunityContainer() {
+function CommunityContainer({ account, contractData }) {
   return (
     <StylesProvider injectFirst>
       <Container
-        className="root-create-pet"
+        className="root-community"
         style={{ minHeight: '70vh', paddingBottom: '3rem' }}
       >
         <div>
@@ -18,11 +18,9 @@ function CommunityContainer() {
           </Typography>
         </div>
 
-
-        <RegisterCommunity />
+        <RegisterCommunity account={account} contractData={contractData} />
 
         <CommunityList />
-
       </Container>
     </StylesProvider>
   )

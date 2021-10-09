@@ -31,18 +31,3 @@ form {
 .text-field {
     padding-bottom: 1rem;
 }
-
-.image-label {
-    padding-right: 12.5rem;
-    color: #7e7d80;
-}
-
-.community-img {
-    width: 200px;
-    height: 150px;
-}
-
-.name-title {
-    color: red;
-    font-weight: bold;
-}
