@@ -58,3 +58,5 @@ type
 user address
 comments
 
+to add deploy key to github
+Generating public/private rsa key pair: ssh-keygen -t rsa -b 4096 -C carbajalluis@rocketmail.com

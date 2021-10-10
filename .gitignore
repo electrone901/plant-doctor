@@ -4,9 +4,9 @@
 /node_modules
 /.pnp
 .pnp.jsclear
-src/APIKEYS.js
-src/components/APIKEYPORT.js
-src/PLANTSWAPAPIKEYS.js
+# src/APIKEYS.js
+# src/components/APIKEYPORT.js
+# src/PLANTSWAPAPIKEYS.js
 
 # testing
 /coverage
