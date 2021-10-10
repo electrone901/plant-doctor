@@ -1,3 +1,7 @@
+
+
+deploy my contract to pocket network https://mainnet.portal.pokt.network/#/app/6160934725e5100036210c11
+
 opensea profile
 https://opensea.io/assets/matic/0x47c7ff137d7a6644a9a96f1d44f5a6f857d9023f/3930
 
@@ -8,17 +12,49 @@ https://mainnet.portal.pokt.network/#/app/6160934725e5100036210c11
 Eth prizes https://showcase.ethglobal.com/ethonline2021/prizes
 
 
+Plants
+https://www.thespruce.com/plants-a-to-z-5116344
+
+
 Chians
 https://chainlist.org/
 
 
 
-Carver Community Garden was awarded a love of your block grant provided by the Citizens Committee of New York City. Great community garden, nice planting spaces, community area, come by and join.
+DONATE =========== To demo Donate Gifts with NFTPORT ===========
+name: name
+Description: This Aeoniums can be planted in the garden at any time.
+mint_to_address: 0x5Df598c222C4A7e8e4AB9f347dcBd924B6458382
+open your console to show the response and go to opensea login to your account it should be there
 
-123 Broadway Ave 14, New York, NY 10026
+
+
+Create A PlantSwap =========== To demo how to create a swap using with Textile ===========
+Enter swap type, description and account. Then confirm and returns a cid
+
+Description: I would love to swap a rooted cutting rose for any other plant. I just want to expand my garden.Thanks ~
+
+
+
+
+Washington Community Garden was awarded a love of your block grant provided by the Citizens Committee of New York City. Great community garden, nice planting spaces, community area, come by and join.
+
+100 Washington street 14, Washington, Wa, 10026
 
 0x236CE2BdFA29834C7037716691A401cAd2eDf95F
 
 // cids
-  photo: QmfTszDpe7niQYpP5DYMYtkCKZUuP33HVWJEVK3ikzvyY8 
+  photo: QmfTszDpe7niQYpP5DYMYtkCKZUuP33HVWJEVK3ikzvyY8
 QmR2mV1KXeDR7UgyB9YyKVk7Ks7v3ESTPyFYSVDh9Vxbzc
+
+
+
+
+
+list of deals
+
+description
+type
+user address
+comments
+

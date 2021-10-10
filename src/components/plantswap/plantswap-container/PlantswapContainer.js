@@ -1,20 +1,22 @@
 import React, { useState } from 'react'
 import './PlantswapContainer.css'
 import { Container, StylesProvider, Typography } from '@material-ui/core'
+import CreateSwap from '../create-swap/CreateSwap'
+import SwapList from '../swap-list/SwapList'
 
-function PlantswapContainer() {
+function PlantswapContainer({ account, contractData }) {
+  console.log(
+    '🚀 ~ file: PlantswapContainer.js ~ line 7 ~ PlantswapContainer ~ account',
+    account,
+    contractData,
+  )
   return (
     <StylesProvider injectFirst>
       <Container
-        className="root-create-pet"
         style={{ minHeight: '70vh', paddingBottom: '3rem' }}
       >
-        <div>
-          <Typography className="title" color="textPrimary" gutterBottom>
-            Plant swap Container
-            add here  create swap and swap list
-          </Typography>
-        </div>
+        <CreateSwap account={account} contractData={contractData} />
+        <SwapList account={account} contractData={contractData} />
       </Container>
     </StylesProvider>
   )

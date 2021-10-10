@@ -31,3 +31,11 @@ form {
 .text-field {
     padding-bottom: 1rem;
 }
+
+.card-header-swap {
+    text-align: initial;
+}
+
+.swap-msg-btn {
+    margin-left: 12rem;
+}

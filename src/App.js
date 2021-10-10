@@ -45,12 +45,6 @@ function App() {
       const abi = community.abi
       const address = community.networks[networkId].address
       const myContract = new web3.eth.Contract(abi, address)
-      // const balance =  myContract.count().call()
-      // console.log(
-      //   '🚀 ~ file: App.js ~ line 49 ~ getContract ~ balance',
-      //   myContract,
-      //   balance,
-      // )
 
       setContractData(myContract)
     } else {
@@ -72,7 +66,11 @@ function App() {
         <Route exact path="/" component={Home} />
         <Switch>
           <Route exact path="/create-pet" component={CreatePet} />
-          <Route exact path="/plant-swap" component={PlantswapContainer} />
+
+          <Route path="/plant-swap">
+            <PlantswapContainer account={account} contractData={contractData} />
+          </Route>
+
           {/* <Route exact path="/community" component={CommunityContainer} /> */}
 
           <Route path="/community">

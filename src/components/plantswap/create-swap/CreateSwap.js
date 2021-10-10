@@ -1,7 +1,10 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import PhotoCamera from '@material-ui/icons/PhotoCamera'
+
 import './CreateSwap.css'
+import { PLANTSWAP } from '../../../PLANTSWAPAPIKEYS'
+import { NFTStorage, File } from 'nft.storage'
 import {
   TextField,
   Container,
@@ -10,22 +13,52 @@ import {
   Button,
   IconButton,
   MenuItem,
+  Card,
 } from '@material-ui/core'
-import { NFTStorage, File } from 'nft.storage'
 import { createRef } from 'react'
-import { apiKey } from '../../APIKEYS'
+import { providers } from 'ethers'
+import { init } from '@textile/eth-storage'
 
-function CreateSwap() {
-  // Add variables
+function CreateSwap({ account, contractData }) {
   const history = useHistory()
+  const swapTypeRef = createRef()
+  const [swapType, setSwapType] = useState('')
+  const [description, setDescription] = useState('')
+  const [codeHash, setCodeHash] = useState('')
   const [image, setImage] = useState('')
-  const petTypeRef = createRef()
-  const [petName, setPetName] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [ownerName, setOwnerName] = useState('')
   const [imageName, setImageName] = useState('')
   const [imageType, setImageType] = useState('')
-  const [petType, setPetType] = useState('')
+
+  const saveToTextile = async () => {
+    try {
+      // connects to ethereum & web3
+      await window.ethereum.enable()
+      const provider = new providers.Web3Provider(window.ethereum)
+      const wallet = provider.getSigner()
+      const storage = await init(wallet)
+
+      // creates a file to save data
+      const createSwap = new Blob([swapType, description, account], {
+        type: 'text/plain',
+      })
+      const file = new File([createSwap], 'createSwap.txt', {
+        type: 'text/plain',
+        lastModified: new Date().getTime(),
+      })
+
+      // await storage.addDeposit()
+      const { id, cid } = await storage.store(file)
+      let formattedCid = cid['/']
+
+      console.log('after', formattedCid)
+      if (cid) {
+        setCodeHash(formattedCid)
+        return formattedCid
+      }
+    } catch (err) {
+      console.error(err)
+    }
+  }
 
   const handleImage = (event) => {
     setImage(event.target.files[0])
@@ -35,47 +68,80 @@ function CreateSwap() {
 
   const handleSubmit = async (event) => {
     event.preventDefault()
+    console.log('swapType', swapType, description, account)
+    if (!account) {
+      alert('Please connect your wallet!')
+    }
 
     try {
-      setLoading(true)
-      const client = new NFTStorage({ token: apiKey })
+      // saveToTextile()
+      const client = new NFTStorage({ token: PLANTSWAP })
+
       const metadata = await client.store({
-        name: petName,
-        description: `${ownerName}, ${petType}`,
+        name: swapType,
+        description: `${description}, ${account}`,
         image: new File([image], imageName, { type: imageType }),
       })
+
       if (metadata) {
-        history.push('/')
+        console.log(
+          '🚀 ~ file: CreateSwap.js ~ line 75 ~ handleSubmit ~ metadata',
+          metadata,
+        )
+        // history.push('/')
+        //cdi;bafyreiffjs7albfsauepb2fe4jgpkdlfvoq6zzmhecik4iym5ofnib37iq
       }
     } catch (error) {
       console.log(error)
-      setLoading(false)
     }
   }
-
 
   return (
     <StylesProvider injectFirst>
       <Container
-        className="root-create-pet"
+        className="root-create-swap"
         style={{ minHeight: '70vh', paddingBottom: '3rem' }}
       >
         <div>
+          {codeHash ? (
+            <Card className="code-hash">
+              <Typography gutterBottom className="title">
+                Your PlantSwap was created succesfully!
+              </Typography>
 
-          <Typography className="title" color="textPrimary" gutterBottom>
-          Create Swap
-          </Typography>
+              <Typography gutterBottom variant="subtitle1">
+                Confirmation cid:
+              </Typography>
+              <p> {codeHash}</p>
 
-          {/* Add Form */}
-          {image ? (
-            <img
-              src={URL.createObjectURL(image)}
-              alt="pet"
-              className="img-preview"
-            />
+              <br />
+
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                href={'https://ipfs.io/ipfs/' + codeHash}
+              >
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className="transaction-btn"
+                >
+                  See details
+                </Button>
+              </a>
+            </Card>
           ) : (
             ''
           )}
+
+          <br />
+          <br />
+
+          <Typography className="title" color="textPrimary" gutterBottom>
+            Create A PlantSwap
+          </Typography>
+
+          {/* Add Form */}
           <div className="form-container">
             <form className="form" noValidate autoComplete="off">
               <input
@@ -93,49 +159,34 @@ function CreateSwap() {
               </label>
               <TextField
                 fullWidth
-                id="outlined-basic"
-                label="Plant's name"
-                variant="outlined"
-                className="text-field"
-                defaultValue={petName}
-                onChange={(e) => setPetName(e.target.value)}
-              />
-              <TextField
-                fullWidth
-                id="outlined-basic"
-                label="Owner's name"
-                variant="outlined"
-                className="text-field"
-                defaultValue={ownerName}
-                onChange={(e) => setOwnerName(e.target.value)}
-              />
-              <TextField
-                fullWidth
-                name="petType"
+                name="swapType"
                 select
-                label="Plant Type"
+                label="Plant Swap"
                 variant="outlined"
                 className="text-field"
-                onChange={(e) => setPetType(e.target.value)}
+                onChange={(e) => setSwapType(e.target.value)}
                 defaultValue=""
-                ref={petTypeRef}
+                ref={swapTypeRef}
               >
-                <MenuItem value="Aquatic plants">Aquatic plants</MenuItem>
-                <MenuItem value="Bulbs">Bulbs</MenuItem>
-                <MenuItem value="Cacti and succulents">
-                  Cacti and succulents
+                <MenuItem value="Cutting to Cutting">
+                  Cutting to Cutting
                 </MenuItem>
-                <MenuItem value="Climbers">Climbers</MenuItem>
-                <MenuItem value="Ferns">Ferns</MenuItem>
-                <MenuItem value="Carnivorous plants">
-                  Carnivorous plants
-                </MenuItem>
-                <MenuItem value="Alpines">Alpines</MenuItem>
-                <MenuItem value="Annuals and biennials">
-                  Annuals and biennials
-                </MenuItem>
-                <MenuItem value="Other">Other</MenuItem>
+                <MenuItem value="Plant to Plant">Plant to Plant</MenuItem>
+                <MenuItem value="Free">Free</MenuItem>
               </TextField>
+
+              <TextField
+                fullWidth
+                multiline
+                rows={2}
+                id="outlined-basic"
+                label="Description"
+                variant="outlined"
+                className="text-field"
+                defaultValue={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+
               <Button
                 size="large"
                 variant="contained"

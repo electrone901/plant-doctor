@@ -10,29 +10,40 @@ import {
   Button,
   IconButton,
   MenuItem,
+  Card,
 } from '@material-ui/core'
 import { NFTStorage, File } from 'nft.storage'
 import { createRef } from 'react'
 import { apiKey } from '../../APIKEYS'
 import { apiKeyport } from '../../components/APIKEYPORT'
+import { toast } from 'react-toast'
+import { ToastContainer } from 'react-toast'
 
 function DonateNFT() {
   // Add variables
   const history = useHistory()
   const [image, setImage] = useState('')
-  const [description, setDescription] = useState('')
-  const [mintAddress, setMintAddress] = useState('')
-  const petTypeRef = createRef()
-  const [loading, setLoading] = useState(false)
-  const [ownerName, setOwnerName] = useState('')
   const [imageName, setImageName] = useState('')
-  const [imageType, setImageType] = useState('')
+  const [description, setDescription] = useState('')
+  let [mintAddress, setMintAddress] = useState('')
+  const [codeHash, setCodeHash] = useState('')
+
   const [petType, setPetType] = useState('')
 
-  const handleImage = (event) => {
-    setImage(event.target.files[0])
-    console.log('description, mintAd', description, mintAddress)
+  const [loading, setLoading] = useState(false)
+  const [ownerName, setOwnerName] = useState('')
+  const [imageType, setImageType] = useState('')
 
+  const showError = () => toast.error('Oops! Some error occurred. Try again! ')
+  const showSuccess = () => toast('Yay your NFT was sent successfully!')
+
+  const mintWithNFTPort = (event) => {
+    event.preventDefault()
+    setImage(event.target.files[0])
+    console.log('description, mintAd', imageName, description, mintAddress)
+    if (mintAddress === '') {
+      mintAddress = '0x5Df598c222C4A7e8e4AB9f347dcBd924B6458382'
+    }
     console.log(' image', event.target.files[0])
     const form = new FormData()
     form.append('file', event.target.files[0])
@@ -49,10 +60,11 @@ function DonateNFT() {
       'https://api.nftport.xyz/easy_mint?' +
         new URLSearchParams({
           chain: 'polygon',
-          name: 'XYZ-Lets go',
-          description: 'XYZ It works!!',
-          mint_to_address: '0x5Df598c222C4A7e8e4AB9f347dcBd924B6458382',
-          msg: 'This is an NFT',
+          name: imageName,
+          description: description,
+          mint_to_address: mintAddress,
+          msg:
+            'This is a gift for being a great Garden Community, thank you for all your hard work!',
         }),
       options,
     )
@@ -60,60 +72,13 @@ function DonateNFT() {
         return response.json()
       })
       .then(function (responseJson) {
-        console.log(responseJson)
-      })
-  }
+        if (responseJson) {
+          showSuccess()
 
-  const handleInputChange = async (event) => {
-    setImageName(event.target.files[0].name)
-    setDescription(event.target.value)
-    setMintAddress(event.target.value)
-
-    // try {
-    //   setLoading(true)
-    //   const client = new NFTStorage({ token: apiKey })
-    //   const metadata = await client.store({
-    //     name: petName,
-    //     description: `${ownerName}, ${petType}`,
-    //     image: new File([image], imageName, { type: imageType }),
-    //   })
-    //   if (metadata) {
-    //     history.push('/')
-    //   }
-    // } catch (error) {
-    //   console.log(error)
-    //   setLoading(false)
-    // }
-  }
-
-  const mintNFTPort = async (image) => {
-    console.log(' image', image)
-    const form = new FormData()
-    form.append('file', image)
-
-    const options = {
-      method: 'POST',
-      body: form,
-      headers: {
-        Authorization: apiKeyport,
-      },
-    }
-
-    fetch(
-      'https://api.nftport.xyz/easy_mint?' +
-        new URLSearchParams({
-          chain: 'polygon',
-          name: 'XYZ-Lets go',
-          description: 'XYZ It works!!',
-          mint_to_address: '0x463Eeb088b094D2CeEec50d186A36DdC80c05870',
-          msg: 'This is an NFT',
-        }),
-      options,
-    )
-      .then(function (response) {
-        return response.json()
-      })
-      .then(function (responseJson) {
+          setCodeHash(responseJson)
+        } else {
+          showError()
+        }
         console.log(responseJson)
       })
   }
@@ -124,10 +89,46 @@ function DonateNFT() {
         className="root-create-pet"
         style={{ minHeight: '70vh', paddingBottom: '3rem' }}
       >
-        DonateNFT
         <div>
+          {codeHash ? (
+            <Card className="code-hash">
+              <Typography gutterBottom className="title">
+                Your NFT was minted succesfully 🎉
+              </Typography>
+
+              <Typography gutterBottom variant="subtitle1">
+                Confirmation Transaction:
+              </Typography>
+              <p> {codeHash.transaction_hash}</p>
+
+              <br />
+              <p>MintedAddress:</p>
+              <p>{codeHash.mint_to_address}</p>
+
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                href={codeHash.transaction_external_url}
+              >
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className="transaction-btn"
+                >
+                  See transaction details
+                </Button>
+              </a>
+            </Card>
+          ) : (
+            ''
+          )}
+
+          <br />
+          <br />
+          <br />
+
           <Typography className="title" color="textPrimary" gutterBottom>
-            Add a photo of your plant
+            Donate NFTs To Your Favorite Garden Community
           </Typography>
 
           {/* Add Form */}
@@ -141,20 +142,8 @@ function DonateNFT() {
             ''
           )}
           <div className="form-container">
+            <ToastContainer delay={3000} />
             <form className="form" noValidate autoComplete="off">
-              <input
-                accept="image/*"
-                className="input"
-                id="icon-button-photo"
-                defaultValue={image}
-                onChange={handleImage}
-                type="file"
-              />
-              <label htmlFor="icon-button-photo">
-                <IconButton color="primary" component="span">
-                  <PhotoCamera />
-                </IconButton>
-              </label>
               <TextField
                 fullWidth
                 id="outlined-basic"
@@ -163,6 +152,7 @@ function DonateNFT() {
                 className="text-field"
                 defaultValue={imageName}
                 onChange={(e) => setImageName(e.target.value)}
+                required
               />
               <TextField
                 fullWidth
@@ -172,25 +162,37 @@ function DonateNFT() {
                 className="text-field"
                 defaultValue={description}
                 onChange={(e) => setDescription(e.target.value)}
+                required
               />
 
               <TextField
                 fullWidth
                 id="outlined-basic"
-                label="Sent to wallet address "
+                label="Sent to wallet Address "
                 variant="outlined"
                 className="text-field"
                 defaultValue={mintAddress}
                 onChange={(e) => setMintAddress(e.target.value)}
+                required
               />
 
-              <Button
-                size="large"
-                variant="contained"
-                color="primary"
-                onClick={mintNFTPort}
-              >
-                Submit
+              <input
+                accept="image/*"
+                className="input"
+                id="icon-button-photo"
+                defaultValue={image}
+                onChange={mintWithNFTPort}
+                type="file"
+              />
+
+              <label htmlFor="icon-button-photo">
+                <IconButton color="primary" component="span">
+                  <PhotoCamera />
+                </IconButton>
+              </label>
+
+              <Button size="large" variant="contained" color="primary">
+                Upload & Submit
               </Button>
             </form>
           </div>

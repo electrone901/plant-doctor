@@ -31,3 +31,19 @@ form {
 .text-field {
     padding-bottom: 1rem;
 }
+
+.code-hash {
+    width: 100%;
+    padding: 1rem;
+    word-break: break-word;
+}
+
+.transaction-btn {
+    margin-bottom: 1rem;
+    background-color: #c329c8;
+    font-weight: 900;
+}
+
+a {
+    text-decoration: none;
+}

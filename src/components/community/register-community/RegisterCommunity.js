@@ -19,8 +19,6 @@ import { providers } from 'ethers'
 import { init } from '@textile/eth-storage'
 
 function RegisterCommunity({ account, contractData }) {
-  console.log(' contractData', contractData)
-
   // Add variables
   const history = useHistory()
   const [image, setImage] = useState('')
@@ -31,9 +29,9 @@ function RegisterCommunity({ account, contractData }) {
   const [imageName, setImageName] = useState('')
   const [imageType, setImageType] = useState('')
   const [loading, setLoading] = useState(false)
-  const [codeHash, setCodeHash] = useState('')
 
   const [communities, setCommunities] = useState([])
+  const [communityCount, setCommunityCount] = useState(0)
 
   useEffect(() => {
     const loadCommunity = async () => {
@@ -49,22 +47,6 @@ function RegisterCommunity({ account, contractData }) {
 
         //  make API call
 
-        // get image
-        // const temp = []
-        // for (let cid of cids.value) {
-        //   if (cid?.cid) {
-        //     const getImage = (ipfsURL) => {
-        //       if (!ipfsURL) return
-        //       ipfsURL = ipfsURL.split('://')
-        //       return 'https://ipfs.io/ipfs/' + ipfsURL[1]
-        //     }
-
-        //     data.image = await getImage(data.image)
-        //     data.cid = cid.cid
-        //     data.created = cid.created
-        //     temp.push(data)
-        //   }
-        // }
         // setPetsData(temp)
         // setLoading(false)
       } catch (error) {
@@ -84,84 +66,111 @@ function RegisterCommunity({ account, contractData }) {
   const getList = async (event) => {
     event.preventDefault()
     if (contractData) {
-      // get community list from the contract
+      // gets communityCount from chain
+      const count = await contractData.methods.count().call()
+      setCommunityCount(count)
 
+      // gets community data
+      const temp = []
+      for (let i = 0; i < communityCount; i++) {
+        const community = await contractData.methods.communityList(i + 1).call()
+        temp.push(community)
+      }
+      setCommunities(temp)
+      console.log('com', communities)
+    }
+  }
+
+  const getCommunityByHash = async (event) => {
+    event.preventDefault()
+    // needs work
+    if (contractData) {
+      // get community list from the contract
       const getCommunityById = await contractData.methods.communityList(
         0x1f8a67061ec8d676a60ff20fedc9226eddc3b81a21808e5dfc42bfc684740557,
       )
       console.log('communityList', getCommunityById)
 
       // get community list from the contract
-      const communityCount = await contractData.methods.count().call()
-      console.log('communityCount', communityCount)
-      const communityList = await contractData.methods.communityList(
-        0x1f8a67061ec8d676a60ff20fedc9226eddc3b81a21808e5dfc42bfc684740557,
-      )
-      console.log('communityList', communityList)
+
+      // const taskCount = await contract.methods.taskCount().call();
+      const count = await contractData.methods.count().call()
+      setCommunityCount(count)
+
+      const temp = []
+      for (let i = 0; i < communityCount; i++) {
+        const community = await contractData.methods.communityList(i + 1).call()
+        temp.push(community)
+      }
+      setCommunities(temp)
+      console.log('com', communities)
     }
   }
 
-  const handleSubmit = async (event) => {
+  const saveToTextile = async () => {
+    try {
+      // connects to ethereum & web3
+      await window.ethereum.enable()
+      const provider = new providers.Web3Provider(window.ethereum)
+      const wallet = provider.getSigner()
+      const storage = await init(wallet)
+
+      // creates a file to save data
+      const communityImage = new Blob([image], { type: 'text/plain' })
+      const file = new File([communityImage], 'community.txt', {
+        type: 'text/plain',
+        lastModified: new Date().getTime(),
+      })
+
+      await storage.addDeposit()
+      const { id, cid } = await storage.store(file)
+      let formattedCid = cid['/']
+
+      console.log('after', formattedCid)
+
+      return formattedCid
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  const saveToChain = async (event) => {
     event.preventDefault()
-    console.log(
-      'input',
-      image,
-      name,
-      description,
-      PhysicalAddress,
-      walletAddress,
-    )
+    const imageFromTextile = await saveToTextile()
 
     try {
-      // await window.ethereum.enable()
-      // const provider = new providers.Web3Provider(window.ethereum)
-      // const wallet = provider.getSigner()
-      // const storage = await init(wallet)
-
-      // // const blob = new Blob([ image, name, description, PhysicalAddress, walletAddress], { type: "text/plain" });
-      // const blob = new Blob(
-      //   [name, description, PhysicalAddress, walletAddress],
-      //   { type: 'text/plain' },
-      // )
-
-      // const communityImage = new Blob([image], { type: 'text/plain' })
-      // const file = new File([blob], 'community.txt', {
-      //   type: 'text/plain',
-      //   lastModified: new Date().getTime(),
-      // })
-
-      // // await storage.addDeposit()
-      // const { id, cid } = await storage.store(file)
-      // console.log('', id)
-      // console.log('cid hash', cid)
-
-      // const { request, deals } = await storage.status(id)
-      // console.log('status_code', request.status_code)
-      // console.log('deals', deals)
-
-      // cid save image to textile first  then get the imageURL then save it to the contract
-      // const storage = await init(account)
-
-      const imageURL1 = 'QmfTszDpe7niQYpP5DYMYtkCKZUuP33HVWJEVK3ikzvyY8',
-        communityName1 = 'Test community',
-        description1 = 'This is wonderful',
-        physicalAddress1 = '123 west street NY NY 10024l',
-        walletAddress1 = '0x83a8bA10cbc13a5Cd827d020693920cc4a7C1103'
-
-      // Call contract to register community
+      // save image to textil, get the imageURL then save imgURL and data to chain using the contract
       const registerCommunityResponse = await contractData.methods
         .registerCommunity(
-          imageURL1,
-          communityName1,
-          description1,
-          physicalAddress1,
-          walletAddress1,
+          imageFromTextile,
+          name,
+          description,
+          PhysicalAddress,
+          walletAddress,
         )
         .send({ from: account })
-
       console.log(' registerCommunityResponse', registerCommunityResponse)
 
       // setCodeHash(registerCommunityResponse)
+      // const storage = await init(account)
+      // first i need to save it to textile then save it to the chain then get it
+      // const imageURL1 = 'QmfTszDpe7niQYpP5DYMYtkCKZUuP33HVWJEVK3ikzvyY8',
+      //   communityName1 = 'Test community',
+      //   description1 = 'This is wonderful',
+      //   physicalAddress1 = '123 west street NY NY 10024l',
+      //   walletAddress1 = '0x83a8bA10cbc13a5Cd827d020693920cc4a7C1103'
+      // Call contract to register community
+      // const registerCommunityResponse = await contractData.methods
+      //   .registerCommunity(
+      //     imageURL1,
+      //     communityName1,
+      //     description1,
+      //     physicalAddress1,
+      //     walletAddress1,
+      //   )
+      //   .send({ from: account })
+      // console.log(' registerCommunityResponse', registerCommunityResponse)
+      // // setCodeHash(registerCommunityResponse)
     } catch (err) {
       console.error(err)
     }
@@ -174,10 +183,6 @@ function RegisterCommunity({ account, contractData }) {
         style={{ minHeight: '70vh', paddingBottom: '3rem' }}
       >
         <div>
-          <img
-            src=" https://ipfs.io/ipfs/QmfTszDpe7niQYpP5DYMYtkCKZUuP33HVWJEVK3ikzvyY8"
-            alt=""
-          />
           <Typography className="title" color="textPrimary" gutterBottom>
             Register Your Garden Community
           </Typography>
@@ -254,7 +259,7 @@ function RegisterCommunity({ account, contractData }) {
                 size="large"
                 variant="contained"
                 color="primary"
-                onClick={handleSubmit}
+                onClick={saveToChain}
               >
                 Submit
               </Button>
@@ -264,7 +269,7 @@ function RegisterCommunity({ account, contractData }) {
             size="large"
             variant="contained"
             color="primary"
-            onClick={getList}
+            onClick={saveToTextile}
           >
             getList
           </Button>
