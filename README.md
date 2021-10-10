@@ -27,7 +27,7 @@ Community garden application makes use of the following softwares:
 
 - `NFTPort` smooth the path of minting and donating NFTs for Garden comunities. This is a win win situation for our Garden comunities because they don't have to pay to contribute or mint NFTs.
 
-- `Pocket Portal ` smooth the path of deploying and hussle of paying such a big transactions to deploy our Garden comunitie's contract to a node using the Rinkeby network.
+- `Pocket Portal` smooth the path of deploying and hussle of paying such a big transactions to deploy our Garden comunitie's contract to a node using the Rinkeby network.
 
 - `Skynet` facilitated the process of deploying our dApp front-end appliication in a seemless way.
 
@@ -41,8 +41,8 @@ Community garden application makes use of the following softwares:
 
 - `React Js, Material-ui, Web3` React Js for the frontend, Material-ui and Web3 to connect to blockchain.
 
-
 # Homename
+
 [App deployed to Skynet](https://000f7i55raokq6cjma4s5tq1vm8scs5gsauklnghvs8enabtlf140ig.siasky.net/)
 [![Build and deploy site to Skynet](https://github.com/electrone901/street-vendor-token/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/electrone901/street-vendor-token/actions/workflows/main.yml)
 
@@ -54,12 +54,22 @@ Deployed to: https://000f7i55raokq6cjma4s5tq1vm8scs5gsauklnghvs8enabtlf140ig.sia
 
 Resolver Skylink Url: https://000f7i55raokq6cjma4s5tq1vm8scs5gsauklnghvs8enabtlf140ig.siasky.net/
 
-
-
 ## Demo
 
-- [Home Page](https://6119c859fed150c8471f90fd--petgrams.netlify.app/)
-  ![Main Page](https://raw.githubusercontent.com/electrone901/petgram/main/src/images/cover.png)
+[Demo App](https://000f7i55raokq6cjma4s5tq1vm8scs5gsauklnghvs8enabtlf140ig.siasky.net/)
+
+Main Page
+![Main Page](https://raw.githubusercontent.com/electrone901/plant-doctor/main/src/images/cover_.png)
+
+Plant Swaper Dex
+![Main Page](https://raw.githubusercontent.com/electrone901/plant-doctor/main/src/images/plantSwap.png)
+
+Community Profile
+![Main Page](https://raw.githubusercontent.com/electrone901/plant-doctor/main/src/images/community.png)
+
+Communities
+![Main Page](https://raw.githubusercontent.com/electrone901/plant-doctor/main/src/images/community%20list.png)
+
 
 # Getting Started
 
@@ -69,5 +79,3 @@ Resolver Skylink Url: https://000f7i55raokq6cjma4s5tq1vm8scs5gsauklnghvs8enabtlf
 
 Builds the app for production to the `build` folder.\
 It correctly bundles React in production mode and optimizes the build for the best performance.
-
-
