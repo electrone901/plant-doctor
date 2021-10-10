@@ -74,7 +74,7 @@ function CreateSwap({ account, contractData }) {
     }
 
     try {
-      // saveToTextile()
+      saveToTextile()
       const client = new NFTStorage({ token: PLANTSWAP })
 
       const metadata = await client.store({
@@ -100,7 +100,7 @@ function CreateSwap({ account, contractData }) {
     <StylesProvider injectFirst>
       <Container
         className="root-create-swap"
-        style={{ minHeight: '70vh', paddingBottom: '3rem' }}
+        style={{ minHeight: '40vh', paddingBottom: '6rem' }}
       >
         <div>
           {codeHash ? (

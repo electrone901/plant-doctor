@@ -37,7 +37,8 @@ Description: I would love to swap a rooted cutting rose for any other plant. I j
 
 
 
-Washington Community Garden was awarded a love of your block grant provided by the Citizens Committee of New York City. Great community garden, nice planting spaces, community area, come by and join.
+
+River Community Garden was awarded a love of your block grant provided by the Citizens Committee of New York City. Great community garden, nice planting spaces, community area, come by and join.
 
 100 Washington street 14, Washington, Wa, 10026
 
@@ -60,3 +61,13 @@ comments
 
 to add deploy key to github
 Generating public/private rsa key pair: ssh-keygen -t rsa -b 4096 -C carbajalluis@rocketmail.com
+
+
+
+Website to use reference:
+https://www.rhs.org.uk/plants/types
+
+images:
+https://www.pinterest.com/pin/351140102200754934/
+https://www.pinterest.com/pin/123919427221896794/
+

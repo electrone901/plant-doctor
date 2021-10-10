@@ -122,7 +122,7 @@ function RegisterCommunity({ account, contractData }) {
         lastModified: new Date().getTime(),
       })
 
-      await storage.addDeposit()
+      // await storage.addDeposit()
       const { id, cid } = await storage.store(file)
       let formattedCid = cid['/']
 
@@ -265,14 +265,14 @@ function RegisterCommunity({ account, contractData }) {
               </Button>
             </form>
           </div>
-          <Button
+          {/* <Button
             size="large"
             variant="contained"
             color="primary"
             onClick={saveToTextile}
           >
             getList
-          </Button>
+          </Button> */}
         </div>
       </Container>
     </StylesProvider>

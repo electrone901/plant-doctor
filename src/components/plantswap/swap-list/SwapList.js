@@ -63,14 +63,16 @@ function SwapList({ account, contractData }) {
               `https://ipfs.io/ipfs/${cid.cid}/metadata.json`,
             )
             data = await data.json()
+            let dataSplit = data.description.split(',')
+            data.description = dataSplit[0]
+            data.userAccount = dataSplit[1]
+
             const getImage = (ipfsURL) => {
               if (!ipfsURL) return
               ipfsURL = ipfsURL.split('://')
               return 'https://ipfs.io/ipfs/' + ipfsURL[1]
             }
             data.image = await getImage(data.image)
-
-            console.log(' data', data)
             data.cid = cid.cid
             data.created = cid.created
             temp.push(data)
@@ -85,130 +87,68 @@ function SwapList({ account, contractData }) {
     }
     loadSwapList()
   }, [])
-  console.log('swapsData', swapsData)
 
   return (
-    <div style={{ minHeight: '70vh', paddingBottom: '3rem' }}>
-      <Card sx={{ maxWidth: 345 }}>
-        <CardHeader
-          className="card-header-swap"
-          avatar={
-            <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-              R
-            </Avatar>
-          }
-          action={
-            <IconButton aria-label="settings">
-              <MoreVertIcon />
-            </IconButton>
-          }
-          title="Shrimp and Chorizo Paella"
-          subheader="September 1, 2021"
-        />
-        <CardMedia
-          component="img"
-          height="194"
-          image="https://images.unsplash.com/photo-1485955900006-10f4d324d411?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1172&q=80"
-          alt="Paella dish"
-        />
-        <CardContent>
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            className="card-header-swap"
-          >
-            This impressive paella is a perfect party dish and a fun meal to
-            cook together with your guests. Add 1 cup of frozen peas along with
-            the mussels, if you like.
-          </Typography>
-        </CardContent>
-        <CardActions disableSpacing>
-          <IconButton aria-label="add to favorites">
-            <FavoriteIcon />
-          </IconButton>
-          <IconButton aria-label="share">
-            <ShareIcon />
-          </IconButton>
-          <Button
-            variant="contained"
-            size="small"
-            component={Link}
-            // to={`/pet-details/${pet.cid}`}
-            className="swap-msg-btn"
-          >
-            Send message
-          </Button>
-        </CardActions>
-      </Card>
-
-      {/* Add pet's Data */}
+    <div style={{ minHeight: '40vh' }}>
       {loading ? (
         <CircularStatic />
       ) : (
-        // description: "test4, 0xC4a3819d366b9373cF3b865eb0BFacb69F805283"
-        // image: "https://ipfs.io/ipfs/bafybeicz5ad6wfszraoe2z3r573eqviqnpzzjrzheylo5lxorptjoldlli/22.png"
-        // name: "Plant to Plant"
-
         <div>
+
           <Grid container spacing={24}>
             {swapsData.length ? (
               swapsData.map((swap, index) => (
-
-<Grid item md={3}>
-                <Card sx={{ maxWidth: 245 }}>
-                  <CardHeader
-                    className="card-header-swap"
-                    avatar={
-                      <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                        R
-                      </Avatar>
-                    }
-                    action={
-                      <IconButton aria-label="settings">
-                        <MoreVertIcon />
-                      </IconButton>
-                    }
-                    title="Shrimp and Chorizo Paella"
-                    subheader="September 1, 2021"
-                  />
-                  <CardMedia
-                    component="img"
-                    height="194"
-                    image="https://images.unsplash.com/photo-1485955900006-10f4d324d411?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1172&q=80"
-                    alt="Paella dish"
-                  />
-                  <CardContent>
-                    <Typography
-                      variant="body2"
-                      color="text.secondary"
+                <Grid item md={3} spacing={1} className="swap-card">
+                  <Card sx={{ maxWidth: 245 }}>
+                    <CardHeader
                       className="card-header-swap"
-                    >
-                      This impressive paella is a perfect party dish and a fun
-                      meal to cook together with your guests. Add 1 cup of
-                      frozen peas along with the mussels, if you like.
-                    </Typography>
-                  </CardContent>
-                  <CardActions disableSpacing>
-                    <IconButton aria-label="add to favorites">
-                      <FavoriteIcon />
-                    </IconButton>
-                    <IconButton aria-label="share">
-                      <ShareIcon />
-                    </IconButton>
-                    <Button
-                      variant="contained"
-                      size="small"
-                      component={Link}
-                      // to={`/pet-details/${pet.cid}`}
-                      className="swap-msg-btn"
-                    >
-                      Send message
-                    </Button>
-                  </CardActions>
-                </Card>
-
-
-                </Grid >
+                      avatar={
+                        <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+                          R
+                        </Avatar>
+                      }
+                      action={
+                        <IconButton aria-label="settings">
+                          <MoreVertIcon />
+                        </IconButton>
+                      }
+                      title={swap.name}
+                      subheader="September 1, 2021"
+                    />
+                    <CardMedia
+                      component="img"
+                      height="194"
+                      image={swap.image}
+                      alt="Paella dish"
+                    />
+                    <CardContent>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        className="card-header-swap"
+                      >
+                        {swap.description}
+                      </Typography>
+                    </CardContent>
+                    <CardActions disableSpacing>
+                      <IconButton aria-label="add to favorites">
+                        <FavoriteIcon />
+                      </IconButton>
+                      <IconButton aria-label="share">
+                        <ShareIcon />
+                      </IconButton>
+                      <Button
+                        variant="contained"
+                        size="small"
+                        component={Link}
+                        // to={`/pet-details/${pet.cid}`}
+                        // className="swap-msg-btn"
+                      >
+                        Send message
+                      </Button>
+                    </CardActions>
+                  </Card>
+                </Grid>
               ))
             ) : (
               <h2>No PlantSwaps Yet...</h2>
