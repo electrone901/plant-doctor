@@ -55,6 +55,13 @@ Community garden application makes use of the following softwares:
 - Deployed to: https://00080jrc0m7ic0nloahfgsqc0u5l3a5bl1c7sp5jomdtqe6ilqf8600.siasky.net/
 - Resolver Skylink: `sia://AQCUHdo53FQh8SMIqtXEBOpN8QSV0hrrvSu5TlTr-nA9YA`
 
+- To add the domain name go to namebase.io dash board / Blockchain DNS records/ edit the second one:
+  - type:  `TXT`
+  - Value / Data: `sia://<Add skylink>`
+
+      - To get skylink go  https://account.siasky.net/uploads click on the file uploaded link, should open a the data in a new page and copy the skylink.
+
+
 ## Demo
 
 [Demo App](https://000f7i55raokq6cjma4s5tq1vm8scs5gsauklnghvs8enabtlf140ig.siasky.net/)
