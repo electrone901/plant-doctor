@@ -1,4 +1,16 @@
+=========== ADD SKYBET TO YOUR APP ===========
+To deploy dapp to skynet:
+- yarn build & drag folder to https://siasky.net/#/
+- gives u the url
 
+To AddHome to screen:
+ - get skynet key account from the doashboard https://account.siasky.net/uploads
+ - add the key to the end of the button
+
+ To Add github actions & skynet
+ - add your apikeys to github
+
+ ===========  ===========  ===========   ===========  ===========
 
 deploy my contract to pocket network https://mainnet.portal.pokt.network/#/app/6160934725e5100036210c11
 
@@ -70,4 +82,8 @@ https://www.rhs.org.uk/plants/types
 images:
 https://www.pinterest.com/pin/351140102200754934/
 https://www.pinterest.com/pin/123919427221896794/
+
+
+
+
 
