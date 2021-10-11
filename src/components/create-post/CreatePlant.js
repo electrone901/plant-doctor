@@ -38,6 +38,8 @@ function CreatePet() {
 
     try {
       setLoading(true)
+      console.log(loading)
+
       const client = new NFTStorage({ token: apiKey })
       const metadata = await client.store({
         name: petName,
@@ -53,7 +55,6 @@ function CreatePet() {
     }
   }
 
-  
   return (
     <StylesProvider injectFirst>
       <Container

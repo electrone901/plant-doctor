@@ -1,18 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
-import PhotoCamera from '@material-ui/icons/PhotoCamera'
 import './SwapList.css'
 import {
-  TextField,
-  Container,
-  StylesProvider,
   Typography,
   Button,
   IconButton,
-  MenuItem,
   Grid,
-  ImageListItem,
-  ImageListItemBar,
   Card,
   CardHeader,
   CardMedia,
@@ -26,22 +18,11 @@ import ShareIcon from '@mui/icons-material/Share'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 
 import { Link } from 'react-router-dom'
-import { NFTStorage, File } from 'nft.storage'
-import { createRef } from 'react'
 import { PLANTSWAP } from '../../../PLANTSWAPAPIKEYS'
 import CircularStatic from '../../commons/CircularProgressWithLabel'
 
 function SwapList({ account, contractData }) {
-  // Add variables
-  const history = useHistory()
-  // const [image, setImage] = useState('')
-  // const petTypeRef = createRef()
-  // const [petName, setPetName] = useState('')
   const [loading, setLoading] = useState(false)
-  // const [ownerName, setOwnerName] = useState('')
-  // const [imageName, setImageName] = useState('')
-  // const [imageType, setImageType] = useState('')
-  // const [petType, setPetType] = useState('')
   const [swapsData, setSwapsData] = useState([])
 
   useEffect(() => {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import './PlantswapContainer.css'
 import { Container, StylesProvider, Typography, Chip } from '@material-ui/core'
 import CreateSwap from '../create-swap/CreateSwap'

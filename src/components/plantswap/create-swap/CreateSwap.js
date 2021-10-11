@@ -1,7 +1,5 @@
 import React, { useState } from 'react'
-import { useHistory } from 'react-router-dom'
 import PhotoCamera from '@material-ui/icons/PhotoCamera'
-
 import './CreateSwap.css'
 import { PLANTSWAP } from '../../../PLANTSWAPAPIKEYS'
 import { NFTStorage, File } from 'nft.storage'
@@ -20,7 +18,6 @@ import { providers } from 'ethers'
 import { init } from '@textile/eth-storage'
 
 function CreateSwap({ account, contractData }) {
-  const history = useHistory()
   const swapTypeRef = createRef()
   const [swapType, setSwapType] = useState('')
   const [description, setDescription] = useState('')
@@ -47,10 +44,9 @@ function CreateSwap({ account, contractData }) {
       })
 
       // await storage.addDeposit()
-      const { id, cid } = await storage.store(file)
+      const { cid } = await storage.store(file)
       let formattedCid = cid['/']
 
-      console.log('after', formattedCid)
       if (cid) {
         setCodeHash(formattedCid)
         return formattedCid
@@ -68,7 +64,6 @@ function CreateSwap({ account, contractData }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    console.log('swapType', swapType, description, account)
     if (!account) {
       alert('Please connect your wallet!')
     }
@@ -84,12 +79,7 @@ function CreateSwap({ account, contractData }) {
       })
 
       if (metadata) {
-        console.log(
-          '🚀 ~ file: CreateSwap.js ~ line 75 ~ handleSubmit ~ metadata',
-          metadata,
-        )
-        // history.push('/')
-        //cdi;bafyreiffjs7albfsauepb2fe4jgpkdlfvoq6zzmhecik4iym5ofnib37iq
+        console.log(' metadata', metadata)
       }
     } catch (error) {
       console.log(error)

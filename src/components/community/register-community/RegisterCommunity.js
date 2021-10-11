@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
 import PhotoCamera from '@material-ui/icons/PhotoCamera'
 import './RegisterCommunity.css'
 import {
@@ -9,18 +8,13 @@ import {
   Typography,
   Button,
   IconButton,
-  MenuItem,
 } from '@material-ui/core'
-import { NFTStorage, File } from 'nft.storage'
-import { createRef } from 'react'
-import { apiKey } from '../../../APIKEYS'
+import { File } from 'nft.storage'
 
 import { providers } from 'ethers'
 import { init } from '@textile/eth-storage'
 
 function RegisterCommunity({ account, contractData }) {
-  // Add variables
-  const history = useHistory()
   const [image, setImage] = useState('')
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
@@ -28,10 +22,6 @@ function RegisterCommunity({ account, contractData }) {
   const [walletAddress, setWalletAddress] = useState('')
   const [imageName, setImageName] = useState('')
   const [imageType, setImageType] = useState('')
-  const [loading, setLoading] = useState(false)
-
-  const [communities, setCommunities] = useState([])
-  const [communityCount, setCommunityCount] = useState(0)
 
   useEffect(() => {
     const loadCommunity = async () => {
@@ -41,17 +31,10 @@ function RegisterCommunity({ account, contractData }) {
 
         let fileData = await fetch(`https://ipfs.io/ipfs/${cid}`)
 
-        console.log('1 🚀 ', fileData)
         const yourData = await fileData.json()
-        console.log('2', yourData)
-
-        //  make API call
-
-        // setPetsData(temp)
-        // setLoading(false)
+        console.log(yourData)
       } catch (error) {
         console.log(error)
-        // setLoading(false)
       }
     }
     loadCommunity()
@@ -61,50 +44,7 @@ function RegisterCommunity({ account, contractData }) {
     setImage(event.target.files[0])
     setImageName(event.target.files[0].name)
     setImageType(event.target.files[0].type)
-  }
-
-  const getList = async (event) => {
-    event.preventDefault()
-    if (contractData) {
-      // gets communityCount from chain
-      const count = await contractData.methods.count().call()
-      setCommunityCount(count)
-
-      // gets community data
-      const temp = []
-      for (let i = 0; i < communityCount; i++) {
-        const community = await contractData.methods.communityList(i + 1).call()
-        temp.push(community)
-      }
-      setCommunities(temp)
-      console.log('com', communities)
-    }
-  }
-
-  const getCommunityByHash = async (event) => {
-    event.preventDefault()
-    // needs work
-    if (contractData) {
-      // get community list from the contract
-      const getCommunityById = await contractData.methods.communityList(
-        0x1f8a67061ec8d676a60ff20fedc9226eddc3b81a21808e5dfc42bfc684740557,
-      )
-      console.log('communityList', getCommunityById)
-
-      // get community list from the contract
-
-      // const taskCount = await contract.methods.taskCount().call();
-      const count = await contractData.methods.count().call()
-      setCommunityCount(count)
-
-      const temp = []
-      for (let i = 0; i < communityCount; i++) {
-        const community = await contractData.methods.communityList(i + 1).call()
-        temp.push(community)
-      }
-      setCommunities(temp)
-      console.log('com', communities)
-    }
+    console.log(imageName, imageType)
   }
 
   const saveToTextile = async () => {
@@ -123,11 +63,8 @@ function RegisterCommunity({ account, contractData }) {
       })
 
       // await storage.addDeposit()
-      const { id, cid } = await storage.store(file)
+      const { cid } = await storage.store(file)
       let formattedCid = cid['/']
-
-      console.log('after', formattedCid)
-
       return formattedCid
     } catch (err) {
       console.error(err)
@@ -140,7 +77,7 @@ function RegisterCommunity({ account, contractData }) {
 
     try {
       // save image to textil, get the imageURL then save imgURL and data to chain using the contract
-      const registerCommunityResponse = await contractData.methods
+      await contractData.methods
         .registerCommunity(
           imageFromTextile,
           name,
@@ -149,28 +86,6 @@ function RegisterCommunity({ account, contractData }) {
           walletAddress,
         )
         .send({ from: account })
-      console.log(' registerCommunityResponse', registerCommunityResponse)
-
-      // setCodeHash(registerCommunityResponse)
-      // const storage = await init(account)
-      // first i need to save it to textile then save it to the chain then get it
-      // const imageURL1 = 'QmfTszDpe7niQYpP5DYMYtkCKZUuP33HVWJEVK3ikzvyY8',
-      //   communityName1 = 'Test community',
-      //   description1 = 'This is wonderful',
-      //   physicalAddress1 = '123 west street NY NY 10024l',
-      //   walletAddress1 = '0x83a8bA10cbc13a5Cd827d020693920cc4a7C1103'
-      // Call contract to register community
-      // const registerCommunityResponse = await contractData.methods
-      //   .registerCommunity(
-      //     imageURL1,
-      //     communityName1,
-      //     description1,
-      //     physicalAddress1,
-      //     walletAddress1,
-      //   )
-      //   .send({ from: account })
-      // console.log(' registerCommunityResponse', registerCommunityResponse)
-      // // setCodeHash(registerCommunityResponse)
     } catch (err) {
       console.error(err)
     }

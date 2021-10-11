@@ -1,7 +1,5 @@
-import React, { useState } from 'react'
-import { Container, StylesProvider, Typography } from '@material-ui/core'
-import RegisterCommunity from '../register-community/RegisterCommunity'
-import CommunityList from '../community-list/CommunityList'
+import React from 'react'
+import { Container, StylesProvider } from '@material-ui/core'
 import './CommunityContainer.css'
 import BasicTabs from './BasicTabs'
 
@@ -13,10 +11,6 @@ function CommunityContainer({ account, contractData }) {
         style={{ minHeight: '70vh', paddingBottom: '3rem' }}
       >
         <BasicTabs  account={account} contractData={contractData}/>
-
-        {/* <RegisterCommunity account={account} contractData={contractData} />
-
-        <CommunityList account={account} contractData={contractData} /> */}
       </Container>
     </StylesProvider>
   )

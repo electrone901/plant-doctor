@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { useHistory } from 'react-router-dom'
 import PhotoCamera from '@material-ui/icons/PhotoCamera'
 import './DonateNFT.css'
 import {
@@ -9,30 +8,19 @@ import {
   Typography,
   Button,
   IconButton,
-  MenuItem,
   Card,
 } from '@material-ui/core'
-import { NFTStorage, File } from 'nft.storage'
-import { createRef } from 'react'
-import { apiKey } from '../../APIKEYS'
 import { apiKeyport } from '../../components/APIKEYPORT'
 import { toast } from 'react-toast'
 import { ToastContainer } from 'react-toast'
 
 function DonateNFT() {
-  // Add variables
-  const history = useHistory()
+
   const [image, setImage] = useState('')
   const [imageName, setImageName] = useState('')
   const [description, setDescription] = useState('')
   let [mintAddress, setMintAddress] = useState('')
   const [codeHash, setCodeHash] = useState('')
-
-  const [petType, setPetType] = useState('')
-
-  const [loading, setLoading] = useState(false)
-  const [ownerName, setOwnerName] = useState('')
-  const [imageType, setImageType] = useState('')
 
   const showError = () => toast.error('Oops! Some error occurred. Try again! ')
   const showSuccess = () => toast('Yay your NFT was sent successfully!')
@@ -40,7 +28,6 @@ function DonateNFT() {
   const mintWithNFTPort = (event) => {
     event.preventDefault()
     setImage(event.target.files[0])
-    console.log('description, mintAd', imageName, description, mintAddress)
     if (mintAddress === '') {
       mintAddress = '0x5Df598c222C4A7e8e4AB9f347dcBd924B6458382'
     }

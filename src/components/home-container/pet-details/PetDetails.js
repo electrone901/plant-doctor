@@ -4,7 +4,6 @@ import FavoriteIcon from '@material-ui/icons/Favorite'
 import ShareIcon from '@material-ui/icons/Share'
 import {
   TextField,
-  List,
   ListItem,
   ListItemAvatar,
   ListItemText,
@@ -21,7 +20,6 @@ import './PetDetails.css'
 
 function PetDetails({ account, contractData }) {
   const { petId } = useParams()
-  // Add state variables
   const [image, setPetImage] = useState('')
   const [petName, setPetName] = useState('')
   const [petOwner, setOwnerName] = useState('')
@@ -30,12 +28,15 @@ function PetDetails({ account, contractData }) {
   const [comment, setComment] = useState('')
   const [codeHash, setCodeHash] = useState('')
 
+
   useEffect(() => {
     if (petId) {
       getMetadata()
       getImage()
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [petId, contractData])
+
 
   const getImage = (ipfsURL) => {
     if (!ipfsURL) return

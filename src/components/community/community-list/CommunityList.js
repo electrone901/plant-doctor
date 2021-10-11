@@ -1,26 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useHistory } from 'react-router-dom'
-import PhotoCamera from '@material-ui/icons/PhotoCamera'
+import { Link } from 'react-router-dom'
 import './CommunityList.css'
 import {
-  TextField,
-  Container,
   StylesProvider,
   Typography,
   Button,
-  IconButton,
-  MenuItem,
 } from '@material-ui/core'
-import { NFTStorage, File } from 'nft.storage'
-import { createRef } from 'react'
-import { apiKey } from '../../../APIKEYS'
-
-import List from '@mui/material/List'
-import ListItem from '@mui/material/ListItem'
-import Divider from '@mui/material/Divider'
-import ListItemText from '@mui/material/ListItemText'
-import ListItemAvatar from '@mui/material/ListItemAvatar'
-import Avatar from '@mui/material/Avatar'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -28,7 +13,6 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
-import community1 from '../../../images/communities/0.jpeg'
 
 function CommunityList({ account, contractData }) {
   // Add variables
@@ -41,6 +25,7 @@ function CommunityList({ account, contractData }) {
         // gets communityCount from chain
         const count = await contractData.methods.count().call()
         setCommunityCount(count)
+        console.log("communityCount", communityCount)
 
         // gets community data
         const temp = []
@@ -57,7 +42,7 @@ function CommunityList({ account, contractData }) {
       }
     }
     getCommunityList()
-  }, [contractData])
+  }, [contractData, communityCount])
 
   const getImage = (ipfsURL) => {
     if (!ipfsURL) return
